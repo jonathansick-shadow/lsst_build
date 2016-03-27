@@ -33,6 +33,7 @@ class ProgressReporter(object):
     # progress reporter: display the version string as progress bar, character by character
 
     class ProductProgressReporter(object):
+
         def __init__(self, outFileObj, product):
             self.out = outFileObj
             self.product = product
@@ -104,6 +105,7 @@ class Builder(object):
 
        The result is tagged with the `Manifest`s build ID, if any.
     """
+
     def __init__(self, build_dir, manifest, progress, eups):
         self.build_dir = build_dir
         self.manifest = manifest
@@ -130,7 +132,7 @@ class Builder(object):
         # create the buildscript
         with open(buildscript, 'w') as fp:
             text = textwrap.dedent(
-            """\
+                """\
             #!/bin/bash
 
             # redirect stderr to stdin

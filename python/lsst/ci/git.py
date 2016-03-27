@@ -5,6 +5,7 @@ import subprocess
 
 
 class GitError:
+
     def __init__(self, returncode, cmd, output, stderr):
         self.returncode = returncode
         self.cmd = cmd
@@ -19,6 +20,7 @@ class GitError:
 
 
 class Git:
+
     def __init__(self, cwd=None):
         self.cwd = cwd
 

@@ -26,6 +26,7 @@ from .git import Git
 
 class Product(object):
     """Class representing an EUPS product to be built"""
+
     def __init__(self, name, sha1, version, dependencies):
         self.name = name
         self.sha1 = sha1
@@ -151,6 +152,7 @@ class ProductFetcher(object):
         :ivar refs: A list of refs to attempt to git-checkout
         :ivar no_fetch: If true, don't fetch, just checkout the first matching ref.
     """
+
     def __init__(self, build_dir, repos, repository_patterns, refs, no_fetch):
         self.build_dir = os.path.abspath(build_dir)
         self.refs = refs
@@ -213,7 +215,8 @@ class ProductFetcher(object):
                 # RepoSpec constructor args
                 rs = RepoSpec(product, **spec)
             else:
-                raise Exception('invalid repos.yaml repo specification -- please check the file with repos-lint')
+                raise Exception(
+                    'invalid repos.yaml repo specification -- please check the file with repos-lint')
 
         return rs
 
@@ -300,7 +303,7 @@ class ProductFetcher(object):
 
                 args += [url, productdir]
                 if not Git.clone(*args, return_status=True)[1]:
-                        break
+                    break
             else:
                 raise Exception("Failed to clone product '%s' from any of the offered repositories" % product)
 
@@ -452,6 +455,7 @@ class VersionDbGit(VersionDbHash):
     """
 
     class VersionMap(object):
+
         def __init__(self):
             self.verhash2suffix = dict()  # (version, dep_sha) -> suffix
             self.versuffix2hash = dict()  # (version, suffix) -> depsha
@@ -557,28 +561,28 @@ class VersionDbGit(VersionDbHash):
         """
         with open(os.path.join(self.dbdir, 'manifests', 'content_sha.db.txt'), 'a+') as fp:
                 # Try to find a manifest with existing matching content
-                for line in fp:
-                        (sha1, tag) = line.strip().split()
-                        if sha1 == manifestSha:
-                                return tag
+            for line in fp:
+                (sha1, tag) = line.strip().split()
+                if sha1 == manifestSha:
+                    return tag
 
-                # Find the next unused tag that matches the bNNNN pattern
-                # and isn't defined in EUPS yet
-                git = Git(self.dbdir)
-                tags = git.tag('-l', 'b[0-9]*').split()
-                btre = re.compile('^b[0-9]+$')
-                btags = [0]
-                btags += [int(t[1:]) for t in tags if btre.match(t)]
-                btag = max(btags)
+            # Find the next unused tag that matches the bNNNN pattern
+            # and isn't defined in EUPS yet
+            git = Git(self.dbdir)
+            tags = git.tag('-l', 'b[0-9]*').split()
+            btre = re.compile('^b[0-9]+$')
+            btags = [0]
+            btags += [int(t[1:]) for t in tags if btre.match(t)]
+            btag = max(btags)
 
-                definedTags = self.eups.tags.getTagNames()
-                while True:
-                    btag += 1
-                    tag = "b%s" % btag
-                    if tag not in definedTags:
-                        break
+            definedTags = self.eups.tags.getTagNames()
+            while True:
+                btag += 1
+                tag = "b%s" % btag
+                if tag not in definedTags:
+                    break
 
-                return tag
+            return tag
 
     def commit(self, manifest, build_id):
         git = Git(self.dbdir)
@@ -637,6 +641,7 @@ class ExclusionResolver(object):
        build for a product, based on matching against a list of regular
        expression rules.
     """
+
     def __init__(self, exclusion_patterns):
         self.exclusions = [
             (re.compile(dep_re), re.compile(prod_re)) for (dep_re, prod_re) in exclusion_patterns
